@@ -11,7 +11,7 @@ class databasecls(db.Model):
     price = db.Column(db.Integer(), nullable=False)
     description = db.Column(db.String(1024), nullable=False)
 
-@app.route('/')
+@app.route('/index')
 def hello_world():
     return '<h1>Hello World!!!</h1>'
 
@@ -23,7 +23,7 @@ def zoome():
 def sayMyName(name):
     return f"<h3>{name}</h3>"
 
-@app.route('/index')
+@app.route('/')
 def index():
     return render_template('index.html')
 @app.route('/sayfromtemplate/<name>')
@@ -41,6 +41,7 @@ def data():
     return render_template('data.html', dic=dic)
 
 @app.route('/database')
+@app.route('/market')
 def database():
     dic = databasecls.query.all()
     return render_template('data.html', dic=dic)

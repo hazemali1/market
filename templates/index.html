@@ -3,11 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
+    <!-- Include Bootstrap CSS locally -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Market</title>
 </head>
 <body>
-    <h1>
-        Index Page
-    </h1>
+
+    <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark"  style="color: white;">
+        <div class="container-fluid" style="color: white;">
+          <a class="navbar-brand" href="/" style="color: white;">Market</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="color: white;">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="color: white;">
+            <div class="navbar-nav" style="color: white;">
+                <a class="nav-link" href="/market" style="color: white;">Market</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+
+    <!-- Include Bootstrap JS and jQuery locally -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
 </body>
 </html>
