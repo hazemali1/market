@@ -1,15 +1,8 @@
-from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
+from classes import databasecls
+from app import app
+from flask import render_template
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/flask'
-db = SQLAlchemy(app)
 
-class databasecls(db.Model):
-    id = db.Column(db.Integer() , primary_key=True)
-    name = db.Column(db.String(30), nullable=False)
-    price = db.Column(db.Integer(), nullable=False)
-    description = db.Column(db.String(1024), nullable=False)
 
 @app.route('/index')
 def hello_world():
