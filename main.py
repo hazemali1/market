@@ -1,6 +1,7 @@
 from classes import databasecls
 from app import app
 from flask import render_template
+from forms import newAccount
 
 
 
@@ -39,3 +40,7 @@ def database():
     dic = databasecls.query.all()
     return render_template('data.html', dic=dic)
 
+@app.route('/NewAccount')
+def NewAccount():
+    form = newAccount()
+    return render_template('newAccount.html', form=form)
