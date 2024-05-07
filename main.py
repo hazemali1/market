@@ -1,6 +1,6 @@
-from classes import databasecls
-from app import app
-from flask import render_template
+from classes import databasecls, User
+from app import app, db
+from flask import render_template, redirect, url_for
 from forms import newAccount
 
 
@@ -40,7 +40,14 @@ def database():
     dic = databasecls.query.all()
     return render_template('data.html', dic=dic)
 
-@app.route('/NewAccount')
+@app.route('/NewAccount', methods=['GET', 'POST'])
 def NewAccount():
     form = newAccount()
+    if form.validate_on_submit():
+        obj = User(username=form.username.data,
+                   email=form.email.data,
+                   password=form.password.data)
+        db.session.add(obj)
+        db.session.commit()
+        return redirect(url_for('database'))
     return render_template('newAccount.html', form=form)
