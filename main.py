@@ -2,7 +2,7 @@ from classes import databasecls, User
 from app import app, db
 from flask import render_template, redirect, url_for, flash
 from forms import newAccount, Login
-from flask_login import login_user
+from flask_login import login_user, logout_user
 
 
 
@@ -65,5 +65,11 @@ def login():
             login_user(user)
             return redirect(url_for('database'))
         else:
-            flash('Invalid Email or Password')
+            flash('Invalid UserName or Password')
     return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    flash('You Have Been Logged Out')
+    return redirect(url_for('index'))
