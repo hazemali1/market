@@ -46,7 +46,7 @@ def NewAccount():
     if form.validate_on_submit():
         obj = User(username=form.username.data,
                    email=form.email.data,
-                   password=form.password.data)
+                   password_hash=form.password.data)
         db.session.add(obj)
         db.session.commit()
         return redirect(url_for('database'))
