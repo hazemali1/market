@@ -2,7 +2,7 @@ from classes import databasecls, User
 from app import app, db
 from flask import render_template, redirect, url_for, flash
 from forms import newAccount, Login
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 
 
 
@@ -37,6 +37,7 @@ def data():
 
 @app.route('/database')
 @app.route('/market')
+@login_required
 def database():
     dic = databasecls.query.all()
     return render_template('data.html', dic=dic)
@@ -50,6 +51,7 @@ def NewAccount():
                    password_hash=form.password.data)
         db.session.add(obj)
         db.session.commit()
+        login_user(obj)
         return redirect(url_for('database'))
     if form.errors != {}:
         for e in form.errors.values():

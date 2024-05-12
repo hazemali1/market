@@ -7,8 +7,8 @@
 {% block body %}
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Error</strong> {{ messages[0][1] }}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        {{ messages[0][1] }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 {% endif %}
