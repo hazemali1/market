@@ -50,4 +50,7 @@ def NewAccount():
         db.session.add(obj)
         db.session.commit()
         return redirect(url_for('database'))
+    if form.errors != {}:
+        for e in form.errors.values():
+            print(f'There Is Error: {e}')
     return render_template('newAccount.html', form=form)
