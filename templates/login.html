@@ -6,9 +6,9 @@
     <!-- Include Bootstrap CSS locally -->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Market</title>
+    <title>Login</title>
 </head>
-<body>
+<body class="text-center">
 
     <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark"  style="color: white;">
         <div class="container-fluid" style="color: white;">
@@ -18,34 +18,37 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="color: white;">
             <div class="navbar-nav" style="color: white;">
-              <a class="nav-link" href="/market" style="color: white;">Market</a>
-              <a class="nav-link" href="/NewAccount" style="color: white;">Sign UP</a>
-              <a class="nav-link" href="{{ url_for('login') }}" style="color: white;">Login</a>
+                <a class="nav-link" href="/market" style="color: white;">Market</a>
+                <a class="nav-link" href="/NewAccount" style="color: white;">Sign UP</a>
+                <a class="nav-link" href="{{ url_for('login') }}" style="color: white;">Login</a>
             </div>
           </div>
         </div>
       </nav>
-    <table class="table">
-        <thead class="table-light">
-          <tr>
-            <th scope="col">id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Price</th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider table-dark">
-            {% for i in dic %}
-                <tr>
-                    <th scope="row">{{i.id}}</th>
-                    <td>{{i.name}}</td>
-                    <td>{{i.description}}</td>
-                    <td>{{i.price}}$</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-      </table>
 
+      <div class="container" style="width:50%;">
+        <form method="POST" class="form-signin" style="color:white;">
+            {{ form.hidden_tag() }}
+            <h3>
+                Please Login
+            </h3>
+            <hr>
+            {{form.username.label()}}
+            {{form.username(class="form-control", placeholder="UserName")}}
+            <hr>
+            {{form.password.label()}}
+            {{form.password(class="form-control", placeholder="PassWord")}}
+
+            <br>
+
+            <div class="checkbox mb-3">
+                <h6>Don't have an account?</h6>
+                <a class="btn btn-sm btn-outline-light" href="{{ url_for('NewAccount') }}">CreateNewAccount</a>
+            </div>
+
+            {{form.submit(class="btn btn-lg btn-block btn-outline-secondary")}}
+        </form>
+      </div>
 
     <!-- Include Bootstrap JS and jQuery locally -->
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>

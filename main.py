@@ -1,7 +1,7 @@
 from classes import databasecls, User
 from app import app, db
 from flask import render_template, redirect, url_for, flash
-from forms import newAccount
+from forms import newAccount, Login
 
 
 
@@ -54,3 +54,8 @@ def NewAccount():
         for e in form.errors.values():
             flash(f'There Is Error: {e}')
     return render_template('newAccount.html', form=form)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = Login()
+    return render_template('login.html', form=form)
