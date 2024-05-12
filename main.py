@@ -1,6 +1,6 @@
 from classes import databasecls, User
 from app import app, db
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash
 from forms import newAccount
 
 
@@ -52,5 +52,5 @@ def NewAccount():
         return redirect(url_for('database'))
     if form.errors != {}:
         for e in form.errors.values():
-            print(f'There Is Error: {e}')
+            flash(f'There Is Error: {e}')
     return render_template('newAccount.html', form=form)
