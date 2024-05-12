@@ -1,8 +1,8 @@
 from classes import databasecls, User
 from app import app, db
-from flask import render_template, redirect, url_for, flash
-from forms import newAccount, Login
-from flask_login import login_user, logout_user, login_required
+from flask import render_template, redirect, url_for, flash, request
+from forms import newAccount, Login, Buy, Sell
+from flask_login import login_user, logout_user, login_required, current_user
 
 
 
@@ -35,12 +35,40 @@ def data():
     ]
     return render_template('data.html', dic=dic)
 
-@app.route('/database')
-@app.route('/market')
+@app.route('/database', methods=['GET', 'POST'])
+@app.route('/market', methods=['GET', 'POST'])
 @login_required
 def database():
-    dic = databasecls.query.all()
-    return render_template('data.html', dic=dic)
+    Buy_form = Buy()
+    Sell_form = Sell()
+    # if Buy_form.validate_on_submit():
+    #     print(request.form.get('item_id'))
+    # To Avoid Message when refresh Page "The page that you're looking for used information that you entered. Returning to that page might cause any action you took to be repeated. Do you want to continue?"
+    if request.method == "POST":
+        item_id = request.form.get('item_id')
+        item = databasecls.query.filter_by(id=item_id).first()
+        item_sell_id = request.form.get('item_sell_id')
+        item_sell = databasecls.query.filter_by(id=item_sell_id).first()
+        if item:
+            if item.price <= current_user.budget:
+                current_user.budget -= item.price
+                item.owner = current_user.id
+                db.session.commit()
+                return redirect(url_for('database'))
+            else:
+                flash('You Dont Have Enough Budget')
+                return redirect(url_for('database'))
+        if item_sell:
+            if item_sell in current_user.items:
+                current_user.budget += item_sell.price
+                item_sell.owner = None
+                db.session.commit()
+                return redirect(url_for('database'))
+
+    if request.method == "GET":
+        dic = databasecls.query.filter_by(owner=None)
+        owned_items = databasecls.query.filter_by(owner=current_user.id)
+        return render_template('data.html', dic=dic, owned_items=owned_items, Buy_form=Buy_form, Sell_form=Sell_form)
 
 @app.route('/NewAccount', methods=['GET', 'POST'])
 def NewAccount():
