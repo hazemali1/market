@@ -1,7 +1,8 @@
 from classes import databasecls, User
 from app import app, db
-from flask import render_template, redirect, url_for, flash, request
-from forms import newAccount, Login, Buy, Sell
+from functools import wraps
+from flask import abort, render_template, redirect, url_for, flash, request
+from forms import newAccount, Login, Buy, Sell, Remove, Add, NewItem, EditItem
 from flask_login import login_user, logout_user, login_required, current_user
 
 
@@ -103,3 +104,70 @@ def logout():
     logout_user()
     flash('You Have Been Logged Out')
     return redirect(url_for('index'))
+
+def only_admain(username):
+    def decorator(view_function):
+        @wraps(view_function)
+        def decorator_function(*args, **kwargs):
+            if current_user.is_authenticated and current_user.username == username:
+                return view_function(*args, **kwargs)
+            else:
+                abort(403)
+        return decorator_function
+    return decorator
+
+@app.route('/admain', methods=['GET', 'POST'])
+@login_required
+@only_admain('admain')
+def admain():
+    Buy_form = Remove()
+    Sell_form = Sell()
+    Add_form = Add()
+    Edit_form = EditItem()
+    if request.method == "POST":
+        item_id = request.form.get('item_id')
+        item = databasecls.query.filter_by(id=item_id).first()
+        item_id_remove = request.form.get('item_id_remove')
+        item_remove = databasecls.query.filter_by(id=item_id_remove).first()
+        Adding = request.form.get('Adding')
+        Editting = request.form.get('item_edit_id')
+        if item:
+            if item.price <= current_user.budget:
+                current_user.budget -= item.price
+                item.owner = current_user.id
+                db.session.commit()
+                return redirect(url_for('admain'))
+            else:
+                flash('You Dont Have Enough Budget')
+                return redirect(url_for('admain'))
+        if item_remove:
+            db.session.delete(item_remove)
+            db.session.commit()
+            return redirect(url_for('admain'))
+        if Adding:
+            return redirect(url_for('newitem'))
+        if Editting:
+            item_to_edit = databasecls.query.filter_by(id=Editting).first()
+            item_to_edit.name = Edit_form.name.data
+            item_to_edit.price = Edit_form.price.data
+            item_to_edit.description = Edit_form.description.data
+            db.session.commit()
+            return redirect(url_for('admain'))
+
+    if request.method == "GET":
+        dic = databasecls.query.filter_by(owner=None)
+        owned_items = databasecls.query.filter(databasecls.owner.isnot(None)).all()
+        return render_template('admain.html', dic=dic, owned_items=owned_items, Buy_form=Buy_form, Sell_form=Sell_form, Add_form=Add_form, Edit_form=Edit_form)
+
+@app.route('/newitem', methods=['GET', 'POST'])
+@login_required
+@only_admain('admain')
+def newitem():
+    form = NewItem()
+    if form.validate_on_submit():
+        obj = databasecls(name=form.name.data, price=form.price.data, description=form.description.data)
+        db.session.add(obj)
+        db.session.commit()
+
+        return redirect(url_for('admain'))
+    return render_template('newitem.html', form=form)

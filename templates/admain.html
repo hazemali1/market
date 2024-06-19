@@ -1,0 +1,187 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Admain
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-8"><table class="table">
+        <h3>Items</h3>
+        <thead class="table-light">
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Options</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider table-dark">
+            {% for item in dic %}
+            <tr>
+                <th scope="row">{{ item.id }}</th>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price }}$</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal{{ item.id }}">
+                        Details
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal{{ item.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ item.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background-color: #212529;">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel{{ item.id }}">{{ item.name }}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {{ item.description }}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalforbuy{{ item.id }}">
+                        Edit
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalforbuy{{ item.id }}" tabindex="-1" aria-labelledby="exampleModalLabelforbuy{{ item.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background-color: #212529;">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabelforbuy{{ item.id }}">{{ item.name }}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Editting item {{item.name}}
+                                    <form method="POST" class="form-signin" style="color:white;">
+                                        {{ Edit_form.hidden_tag() }}
+                                        <hr>
+                                        {{Edit_form.name.label()}}
+                                        {{Edit_form.name(class="form-control", placeholder="Name", value=item.name)}}
+                                        <hr>
+                                        {{Edit_form.price.label()}}
+                                        {{Edit_form.price(class="form-control", placeholder="Price", value=item.price)}}
+                                        <hr>
+                                        {{Edit_form.description.label()}}
+                                        {{Edit_form.description(class="form-control", placeholder="Description", value=item.description)}}
+                                        <br>
+                                        <input id="item_edit_id" name="item_edit_id" type="hidden" value="{{item.id}}">
+                                        {{Edit_form.submit(class="btn btn-lg btn-block btn-outline-success")}}
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalforremove{{ item.id }}">
+                        Remove
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalforremove{{ item.id }}" tabindex="-1" aria-labelledby="exampleModalLabelforremove{{ item.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background-color: #212529;">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabelforremove{{ item.id }}">{{ item.name }}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are You Sure You Wanna Remove This item => {{item.name}}?
+                                    <form method="POST" class="form-signin" style="color:white;">
+                                        {{ Buy_form.hidden_tag() }}
+                                        <br>
+                                        <input id="item_id_remove" name="item_id_remove" type="hidden" value="{{item.id}}">
+                                        {{Buy_form.submit(class="btn btn-lg btn-block btn-outline-success")}}
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                </td>
+            </tr>
+        {% endfor %}
+        
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+        <form method="POST" class="form-signin" style="color:white;">
+            {{ Add_form.hidden_tag() }}
+            <br>
+            <input id="Adding" name="Adding" type="hidden" value=True>
+            {{Add_form.submit(class="btn btn-lg btn-block btn-outline-success")}}
+        </form>
+    </div>
+
+
+    <div class="col-8"><table class="table">
+        <h3>Sold Items</h3>
+        <thead class="table-light">
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Options</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider table-dark">
+            {% for item in owned_items %}
+            <tr>
+                <th scope="row">{{ item.id }}</th>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price }}$</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal{{ item.id }}">
+                        Details
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal{{ item.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ item.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background-color: #212529;">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel{{ item.id }}">{{ item.name }}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {{ item.description }}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+        
+                </td>
+            </tr>
+        {% endfor %}
+        
+        </tbody>
+      </table>
+    </div>
+
+
+
+
+    
+  </div>
+
+{% endblock %}

@@ -30,3 +30,21 @@ class Buy(FlaskForm):
 
 class Sell(FlaskForm):
     submit = SubmitField(label='Sell')
+
+class Remove(FlaskForm):
+    submit = SubmitField(label='Remove')
+
+class Add(FlaskForm):
+    submit = SubmitField(label='Add New Item')
+
+class NewItem(FlaskForm):
+    name = StringField(label='Name:', validators=[DataRequired()])
+    price = StringField(label='Price:', validators=[DataRequired()])
+    description = StringField(label='Description:', validators=[DataRequired()])
+    submit = SubmitField(label='Add')
+
+class EditItem(FlaskForm):
+    name = StringField(label='Name:', validators=[DataRequired()])
+    price = StringField(label='Price:', validators=[DataRequired()])
+    description = StringField(label='Description:', validators=[DataRequired()])
+    submit = SubmitField(label='Edit')
